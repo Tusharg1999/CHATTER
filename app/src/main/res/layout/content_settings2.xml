@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/profile_image"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:src="@drawable/profile_image"
+        app:civ_border_width="2dp"
+        app:civ_border_color="#FF000000"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/profile_image"
+        android:id="@+id/name_edit_text_name"
+        android:drawableStart="@drawable/edit_profile"
+        android:inputType="textMultiLine"
+        android:background="@drawable/edit_text"
+        android:layout_marginLeft="5dp"
+        android:textAlignment="center"
+        android:padding="6dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:hint="Enter Name"
+        android:textColor="@color/black"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/name_edit_text_name"
+        android:id="@+id/name_status"
+        android:drawableStart="@drawable/edit_status"
+        android:inputType="textMultiLine"
+        android:background="@drawable/edit_text"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:textAlignment="center"
+        android:hint="Hey! I am using Chatters app..."
+        android:padding="6dp"
+        android:textColor="@color/black"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/name_status"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:textStyle="bold"
+        android:id="@+id/submit_status_button"
+        android:text="Update"
+        android:textColor="@color/black"
+        android:background="@drawable/button_background_resource"/>
+
+
+</RelativeLayout>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <ImageView
+        android:id="@+id/signup_photo"
+        android:layout_width="match_parent"
+        android:layout_height="256dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:src="@drawable/signup_photo" />
+    <EditText
+        android:layout_width="300dp"
+        android:id="@+id/edit_text_email_signup"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/signup_photo"
+        android:background="@drawable/edit_text"
+        android:layout_marginTop="20dp"
+        android:hint="Email.."
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:inputType="textEmailAddress"
+        android:drawableStart="@drawable/email"
+        android:layout_height="wrap_content"
+        />
+
+    <EditText
+        android:layout_width="300dp"
+        android:id="@+id/edit_text_password_signup"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/edit_text_email_signup"
+        android:background="@drawable/edit_text"
+        android:layout_marginTop="10dp"
+        android:hint="Password.."
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:inputType="textPassword"
+        android:drawableStart="@drawable/password"
+        android:layout_height="wrap_content"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="Create With Phone Number..."
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/edit_text_password_signup"
+        android:layout_marginTop="5dp"
+        android:textStyle="bold"
+        android:clickable="true"
+        android:onClick="goToSignInRegisterFromPhoneActivity"
+        android:id="@+id/create_with_Phone"
+        android:layout_height="wrap_content"
+        />
+    <Button
+        android:layout_width="300dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/create_with_Phone"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/button_background_resource"
+        android:text="Create account"
+        android:id="@+id/submit_account_info"
+        android:textStyle="bold"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="Already Have An Account?"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/submit_account_info"
+        android:layout_marginTop="5dp"
+        android:textStyle="bold"
+        android:clickable="true"
+        android:onClick="goToSignInActivity"
+        android:id="@+id/already_have_account"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>
