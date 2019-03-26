@@ -10,4 +10,6 @@
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="title_activity_group_chat">GroupChatActivity</string>
     <string name="title_activity_register_from_phone">RegisterFromPhoneActivity</string>
+    <string name="title_activity_group_chat_settings">GroupChatSettingsActivity</string>
+    <string name="title_activity_profile">ProfileActivity</string>
 </resources>

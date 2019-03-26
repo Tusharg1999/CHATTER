@@ -1,10 +1,13 @@
 package com.example.superman.chatter;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -93,8 +96,30 @@ public class GroupChatActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+         super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.group_chat_menu,menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+         super.onOptionsItemSelected(item);
+        if((item.getItemId())==R.id.group_setting)
+        {
+            goToGroupSettingActivity();
+        }
+        return true;
+    }
 
+    private void goToGroupSettingActivity()
+    {
+        Intent intent=new Intent(GroupChatActivity.this,GroupChatSettingsActivity.class);
+        intent.putExtra("groupname",GroupName);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
 
     private void initializeField()
     {

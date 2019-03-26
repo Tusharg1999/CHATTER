@@ -79,11 +79,19 @@ public class MainActivity extends AppCompatActivity {
     private void checkForCurrentUser() {
         String currentUserId = mAuth.getCurrentUser().getUid();
 
-        userReference.child("user")
-                .child(currentUserId).child("name").addValueEventListener(new ValueEventListener() {
+        userReference.child("user").child(currentUserId).child("name").addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            {
+                if(dataSnapshot.exists())
                 Log.d(TAG, "onDataChange: " + dataSnapshot.toString());
+
+                else
+                {
+                    Intent intent =new Intent(MainActivity.this,SettingsActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
             }
 
             @Override
@@ -134,6 +142,11 @@ public class MainActivity extends AppCompatActivity {
         }
         if ((item.getItemId()) == R.id.create_group) {
             requestGroup();
+        }
+        if ((item.getItemId())==R.id.find_friends)
+        {
+            Intent intent=new Intent(MainActivity.this,FindFriendActivity.class);
+            startActivity(intent);
         }
         return true;
     }

@@ -1,5 +1,6 @@
 package com.example.superman.chatter;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,13 +8,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -24,16 +24,15 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
-
-import java.net.URI;
 import java.util.HashMap;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class SettingsActivity extends AppCompatActivity {
+
     private static final String TAG = "SettingsActivity";
     private Button updateProfileButton;
     private EditText editTextName, editTextStatus;
@@ -43,11 +42,12 @@ public class SettingsActivity extends AppCompatActivity {
     private String currentUserId;
     private static final int GALLERY_PICK = 1;
     private StorageReference mImageStorage;
+    private ProgressDialog mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+        setContentView(R.layout.content_settings2);
         initializeFields();
         editTextName.setVisibility(View.INVISIBLE);
         mAuth = FirebaseAuth.getInstance();
@@ -80,13 +80,15 @@ public class SettingsActivity extends AppCompatActivity {
                 if ((dataSnapshot.exists()) && (dataSnapshot.hasChild("name")) && (dataSnapshot.hasChild("image"))) {
                     String retrievename = dataSnapshot.child("name").getValue().toString();
                     String retrieveStatus = dataSnapshot.child("status").getValue().toString();
+                    String reteriveImage=dataSnapshot.child("image").getValue().toString();
                     editTextName.setText(retrievename);
                     editTextStatus.setText(retrieveStatus);
+                    Picasso.get().load(reteriveImage).into(settingsImage);
                 } else if ((dataSnapshot.exists()) && (dataSnapshot.hasChild("name"))) {
                     String retrievename = dataSnapshot.child("name").getValue().toString();
                     String retrieveStatus = dataSnapshot.child("status").getValue().toString();
                     editTextName.setText(retrievename);
-                    editTextStatus.setText(retrieveStatus);
+                    editTextStatus.setHint(retrieveStatus);
                 } else {
                     editTextName.setVisibility(View.VISIBLE);
                     Toast.makeText(SettingsActivity.this, "Please enter your Information first", Toast.LENGTH_SHORT).show();
@@ -106,7 +108,8 @@ public class SettingsActivity extends AppCompatActivity {
         editTextName = findViewById(R.id.name_edit_text_name);
         editTextStatus = findViewById(R.id.name_status);
         settingsImage = findViewById(R.id.profile_image);
-        mImageStorage = FirebaseStorage.getInstance().getReference();
+        mImageStorage = FirebaseStorage.getInstance().getReference().child("Profile Images");
+        mProgressBar = new ProgressDialog(SettingsActivity.this);
     }
 
     private void updateUserProfile() {
@@ -150,36 +153,60 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == GALLERY_PICK) {
-            Uri imageUri = null;
-            if (data != null) imageUri = data.getData();
-            else Log.d(TAG, "data is null");
-
-            CropImage.activity(imageUri)
+        if (resultCode == RESULT_OK && requestCode == GALLERY_PICK && data != null) {
+            Uri imageuri = data.getData();
+            CropImage.activity(imageuri)
+                    .setGuidelines(CropImageView.Guidelines.ON)
                     .setAspectRatio(1, 1)
                     .start(this);
-
         }
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
-                Uri resultUri = result.getUri();
-                StorageReference filepath = mImageStorage.child("images").child("new.jpg");
-                filepath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                mProgressBar.setTitle("Loading");
+                mProgressBar.setMessage("Wait while we are uploading your image");
+                mProgressBar.setCanceledOnTouchOutside(false);
+                mProgressBar.show();
+                Uri ResultUri = result.getUri();
+                final StorageReference filepath = mImageStorage.child("Profile Images").child(currentUserId + ".jpg");
+
+                filepath.putFile(ResultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(SettingsActivity.this, "yes", Toast.LENGTH_SHORT).show();
+                            mImageStorage.child("Profile Images").child(currentUserId + ".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+
+                                @Override public void onSuccess(Uri uri) {
+
+                                    String downloadUrl = uri.toString();
+                                    currentUserReference.child("user").child(currentUserId).child("image").setValue(downloadUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task)
+                                        {
+                                            if (task.isSuccessful())
+                                            {
+                                                Toast.makeText(SettingsActivity.this, "done", Toast.LENGTH_SHORT).show();
+                                                mProgressBar.dismiss();
+                                            }
+                                            else
+                                            {
+                                                String error=task.getException().toString();
+                                                Toast.makeText(SettingsActivity.this, error, Toast.LENGTH_SHORT).show();
+                                                mProgressBar.dismiss();
+                                            }
+
+                                        }
+                                    });
+                                }
+                                }
+
+                            );
                         }
+
                     }
                 });
-
-
-            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                Exception error = result.getError();
             }
         }
-
     }
-
 }
+

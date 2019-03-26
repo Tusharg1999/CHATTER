@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    android:background="@color/background_for_layout">
 
     <de.hdodenhof.circleimageview.CircleImageView
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -24,7 +24,7 @@
         android:background="@drawable/edit_text"
         android:layout_marginLeft="5dp"
         android:textAlignment="center"
-        android:padding="6dp"
+        android:gravity="center"
         android:layout_marginRight="5dp"
         android:layout_marginTop="10dp"
         android:hint="Enter Name"
@@ -40,10 +40,9 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="10dp"
-        android:textAlignment="center"
         android:hint="Hey! I am using Chatters app..."
-        android:padding="6dp"
-        android:textColor="@color/black"/>
+        android:textColor="@color/black"
+        android:textAlignment="center" />
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
